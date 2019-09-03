@@ -1,0 +1,53 @@
+/* Color Palette
+    Blue #7FCAAC
+    Yellow #F3BF2A
+    Brown #92623B
+    Gray #383838
+ 
+*/
+
+
+/* GLobal styles
+--------------------*/
+
+body{
+    background-image: url("../images/background.jpg"); /*Photo by Paweł Czerwiński on Unsplash*/
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #F3BF2A; 
+    font-family: Georgia, 'Times New Roman', Times, serif;    
+ }
+
+h1 {
+    font-family: 'Permanent Marker', cursive;   
+    font-size: 2.5rem;    
+}
+
+h2 {
+    font-size: 1.5rem;   
+    font-family: 'Beth Ellen', cursive;
+}
+
+
+/* Main body styles
+--------------------*/
+
+img {
+    width: 60%;  
+    margin-top: 10%;  
+}
+
+.player {
+    margin-top: 10%;  
+}
+
+.btn-group {
+    margin-left: 10%;
+    margin-top: 10%;
+}
+
+.button {
+    margin-top: 10%;
+}
+  
+

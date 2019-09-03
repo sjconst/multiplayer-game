@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Lucky Dice</title>
+     <!--// bootstrap stylesheet-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <!--// google fonts and font awesome stylesheet-->
+    <link href="https://fonts.googleapis.com/css?family=Beth+Ellen|Permanent+Marker|Roboto+Condensed&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <!--// author stylesheet-->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body class="d-flex flex-column h-100">
+
+<!-- // Header -->
+    <header class="container">
+        <h1 class="row justify-content-center">Lucky Dice</h1>
+    </header>
+
+<!-- // Main section -->
+    <main role="main" class="container">          
+            <label class="btn btn-secondary active">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> Computer Opponent
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" id="option2" autocomplete="off"> Human Opponent
+            </label>               
+        <div class="player row">
+            <div class="col-6 text-center">
+                <h2 id="player1">Player 1</h2>
+            </div>    
+            <div class="col-6 text-center">
+                <h2 id="player2">Player 2</h2>
+            </div>     
+        </div>    
+        <div class="dice row">                    
+            <div class="col-6 text-center">         
+                <img class="dice" id="player1Dice" src="assets/images/dice-1.png">
+            </div>     
+            <div class="col-6 text-center">         
+                    <img class="dice" id="player2Dice" src="assets/images/dice-1.png">
+            </div>    
+        </div>    
+        <div class="button row">                    
+            <div class="col-6 text-center">         
+                <button type="button" class="btn btn-warning" id="player1Btn">Roll </button>
+            </div>     
+            <div class="col-6 text-center">         
+                <button type="button" class="btn btn-warning" id="player2Btn">Roll </button>
+            </div>        
+        </div>   
+        <div class="score row">
+            <div class="col-6 text-center">
+                    <h2 id="player1">Score:<span id="player1Score">0</span></h2>
+            </div>    
+            <div class="col-6 text-center">
+                <h2 id="player2">Score:<span id="player2Score">0</span></h2>
+            </div> 
+         </div>
+    </main>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="assets/javascript/game.js"></script>
+
+</body>
+</html>
