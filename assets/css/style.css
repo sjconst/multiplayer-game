@@ -49,5 +49,22 @@ img {
 .button {
     margin-top: 10%;
 }
+
+#popup {
+    max-width: 200px;
+    width: 70%;
+    max-height: 80px;
+    height: 60%; 
+    padding: 10px;
+    position: absolute;
+    background: #7FCAAC;   
+    color: #92623B;
+    font-size: 2rem;    
+    left: 50%;
+    margin-left: -25%;
+    top: 50%;
+    margin-top: -30%;
+    visibility: hidden;
+}
   
 
