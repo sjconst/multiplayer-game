@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
 var firebaseConfig = {
     apiKey: "AIzaSyBSJk7QXljKOrv2Kw63Ok-SFsGkItk8TIw",
     authDomain: "multiplayer-game-8672a.firebaseapp.com",
@@ -9,63 +8,84 @@ var firebaseConfig = {
     messagingSenderId: "433166556859",
     appId: "1:433166556859:web:a6e3a742dbe483f9"
     };
-
 firebase.initializeApp(firebaseConfig);
-
 //Global variables, setup objects
 var database = firebase.database();   
 var randomRoll = () => Math.floor(Math.random() * 6) + 1;
-var player1Roll = 1;
-var player2Roll = 2;
-var player1Score = 0;
-var player2Score = 0;
-
-database.ref().set({
-    player1Roll: player1Roll,
-    player2Roll: player2Roll,
-    player1Score: player1Score,
-    player2Score: player2Score  
-});  
-
+var player1Roll, player2Roll, player1Score, player2Score, computerGame;
+//Database set function
+function databaseSet(){
+    database.ref().set({
+        player1Roll: player1Roll,
+        player2Roll: player2Roll,
+        player1Score: player1Score,
+        player2Score: player2Score  
+    });    
+};
+//DOM object
+const DOM = {    
+    $player1Score: $("#player1Score"),
+    $player2Score: $("#player2Score"),
+    $player1Dice: $("img[id*='player1Dice']"),
+    $player2Dice: $("img[id*='player2Dice']"),    
+    $option1: $("input[id*='option1']"),
+    $option2: $("input[id*='option2']"),
+    $option1Label: $("label[id*='labelOption1']"),
+    $option2Label: $("label[id*='labelOption2']")
+};
+//UI object
+const UI = {
+    diceDisplay: function(){
+        DOM.$player1Dice.attr("src", "assets/images/dice-" + player1Roll + ".png");           
+        DOM.$player2Dice.attr("src", "assets/images/dice-" + player2Roll + ".png");    
+    },
+    option1Checked: document.getElementById("option1").hasAttribute("checked"),
+    option2Checked: document.getElementById("option2").hasAttribute("checked")
+};
+//initiate function
+function init () {
+    if(UI.option1Checked){
+        computerGame = true;
+    };
+    player1Roll = 1;
+    player2Roll = 2;
+    player1Score = 0;
+    player2Score = 0;
+    databaseSet();      
+    DOM.$player2Score.text(player2Score);   
+    DOM.$player1Score.text(player1Score); 
+};
+init();
 //Firebase listener
 database.ref().on("value", function(snapshot){
-    // If Firebase has a player2Roll stored
-    if($("#option2").hasClass("active")/* snapshot.child("player2Roll").exists() && snapshot.child("player1Roll").exists() */){
+    // If playing another player live
+    if(UI.option2Checked){
         // Set the variables for player2Roll equal to the stored values in firebase.
         player1Roll = parseInt(snapshot.val().player1Roll);
         player2Roll = parseInt(snapshot.val().player2Roll);              
         // //Change the UI 
-        $("img[id*='player1Dice']").attr("src", "assets/images/dice-" + player1Roll + ".png");           
-        $("img[id*='player2Dice']").attr("src", "assets/images/dice-" + player2Roll + ".png");
-        //human opponent button is selected
-        // $("#option2").addClass("active").attr("checked");
-        // $("#option1").removeClass("active").removeAttr("checked");
-    } /* else if($("#option2").hasClass("active")){
-        //Update UI
-        $("#player1Score").text(player1Score);    
-        $("img[id*='player1Dice']").attr("src", "assets/images/dice-" + player1Roll + ".png"); 
-    } */ else {                 
-        // //diplay resulting dice;
-        $("img[id*='player1Dice']").attr("src", "assets/images/dice-" + player1Roll + ".png");   
-        $("img[id*='player2Dice']").attr("src", "assets/images/dice-" + player2Roll + ".png");  
+        UI.diceDisplay();  
+        } else if(document.getElementById("option1").hasAttribute("checked")) {                          
+        // diplay resulting dice;
+        UI.diceDisplay();  
         //display score
-        $("#player2Score").text(snapshot.val().player2Score);   
-        $("#player1Score").text(snapshot.val().player1Score);        
-        //Computer Opponent button is active
-        // $("#option1").addClass("active").attr("checked");
-        // $("#option2").removeClass("active").removeAttr("checked");
-        // }
-    }}, function(errorObject) {
+        DOM.$player2Score.text(snapshot.val().player2Score);   
+        DOM.$player1Score.text(snapshot.val().player1Score);  
+        } else {
+        //wait for player2
+        console.log("waiting for player 2")
+        }
+}, function(errorObject) {
         console.log("The read failed: " + errorObject.code);        
     });
-
 // Whenever a user clicks the player1Roll button
 $("#player1Btn").on("click", function(){
+    if (computerGame) {
         // get random number
         player1Roll = randomRoll();   
         console.log(player1Roll);
         // if playing computer, give player2 score randomly
-        if(document.getElementById("option1").hasAttribute("checked")){
+        if(UI.option1Checked){
             // Play against the computer.
             player2Roll = randomRoll();  
             console.log(player2Roll); 
@@ -82,20 +102,15 @@ $("#player1Btn").on("click", function(){
                 // player2 score increases
                 player2Score++;                       
             };           
-        }    
-        database.ref().set({
-            player1Roll: player1Roll,
-            player2Roll: player2Roll,
-            player1Score: player1Score,
-            player2Score: player2Score  
-        });        
-    })
-
+        };   
+        databaseSet();
+    }
+});
 $("#player2Btn").on("click", function(){
     // give player2 a random number
     player2Roll = randomRoll();
     console.log(player1Roll);    
-    if(document.getElementById("option2").hasAttribute("checked")){       
+    if(UI.option2Checked){       
         // If then statements to compare against player 2
         if (player1Roll > player2Roll) {
             // player1 score increases
@@ -112,25 +127,22 @@ $("#player2Btn").on("click", function(){
             console.log(player1Roll);                    
         };        
     }     
-    database.ref().set({
-        player1Roll: player1Roll,
-        player2Roll: player2Roll,
-        player1Score: player1Score,
-        player2Score: player2Score  
-    });        
-})
-
+    databaseSet();     
+});
 $("#option2").on("click", function(){
-    $("#option2").addClass("active").attr("checked");
-    $("#option1").removeClass("active").removeAttr("checked");
+    DOM.$option2.attr("checked");
+    DOM.$option2Label.addClass("active");
+    DOM.$option1.removeAttr("checked");
+    DOM.$option1Label.removeClass("active");
+    init();
     //display popup for 2 seconds that says how to play with two players
-})
-
+});
 $("#option1").on("click", function(){
-    $("#option1").addClass("active").attr("checked");
-    $("#option2").removeClass("active").removeAttr("checked");
+    DOM.$option1.attr("checked");
+    DOM.$option1Label.addClass("active");
+    DOM.$option2.removeAttr("checked");
+    DOM.$option2Label.removeClass("active");
+    init();
     //display popup for 2 seconds that says how to play with the computer
-})
-    
-
+}) 
 });
