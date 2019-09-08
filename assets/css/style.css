@@ -66,5 +66,10 @@ img {
     margin-top: -30%;
     visibility: hidden;
 }
+#reset {
+    background-color: gray;
+    border: none; 
+    margin-top: 5%;   
+}
   
 
