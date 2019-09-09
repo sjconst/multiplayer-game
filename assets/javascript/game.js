@@ -34,41 +34,29 @@ function databaseSet(){
         player2Status: player2Status, 
     });    
 };
-//Check Status function
-function checkStatus(player){
-    if(player.hasClass("active")){
-        status = "active";
-        return status;
-    } else {
-        status = "inactive";
-        return status;
-    }
-};
 // Score evaluation function
 function scoreEval() {
     if (player1Roll > player2Roll) {
         // player1 score increases
         player1Score++;                
     } else if (player1Roll === player2Roll){
+        //"It's a tie" popup
         UI.popup(); 
     } else {
         // player2 score increases
         player2Score++;                       
-    }; 
-    console.log("score eval working and the scores are" + player1Score + player2Score)
+    };    
     return player1Score, player2Score;
 }; 
 //UI object
 var UI = {
     diceDisplay: function(){
-        DOM.$player1Dice.attr("src", "assets/images/dice-" + player1Roll + ".png");           
-        DOM.$player2Dice.attr("src", "assets/images/dice-" + player2Roll + ".png");    
-        console.log("diceDisplay working");
+        DOM.$player1Dice.attr("src", `assets/images/dice-${player1Roll}.png`);           
+        DOM.$player2Dice.attr("src", `assets/images/dice-${player2Roll}.png`);   
     },
     scoreDisplay: function(snapshot){
         DOM.$player2Score.text(snapshot.val().player2Score);   
         DOM.$player1Score.text(snapshot.val().player1Score);  
-        console.log("scoreDisplay working");
     },
     popup: function(){
         $("#popup").css("visibility", "visible");
@@ -96,8 +84,7 @@ var UI = {
 //initiate function
 function init () {
     UI.resetLabelClasses();
-    UI.scoresToZero();
-    activePlayer = 0;
+    UI.scoresToZero();   
     UI.resetDiceClasses();
     player1Status = "active";
     player2Status = "inactive";
@@ -105,66 +92,77 @@ function init () {
     player2Roll = 1;
     databaseSet();
 };
-init();
-//
 //Firebase and other event listeners
 database.ref().on("value", function(snapshot){  
-        player1Roll = parseInt(snapshot.val().player1Roll);
-        player2Roll = parseInt(snapshot.val().player2Roll);   
-        UI.diceDisplay(); 
-        UI.scoreDisplay(snapshot);
-        console.log("database got a value");  
+    //update variables based on database
+    player1Roll = parseInt(snapshot.val().player1Roll);
+    player2Roll = parseInt(snapshot.val().player2Roll);   
+    //display corresponding dice and score
+    UI.diceDisplay(); 
+    UI.scoreDisplay(snapshot);    
 }, function(errorObject) {
         console.log("The read failed: " + errorObject.code);        
 });
 // Whenever a user clicks the player1Roll button
 $("#player1Btn").on("click", function(){
+    //if computer oponent selected
     if(DOM.$option1.hasClass("active")){
-        // get random number
+        //player1 gets random number
         player1Roll = randomRoll();   
-        // Play against the computer.
+        //player2 gets random number
         player2Roll = randomRoll();  
+        //evaluate rolls
         scoreEval();
+        //send to database
         databaseSet();
     } else {
+        //check the database to see if player 1 active
         database.ref().child("player1Status").once("value", function(snapshot){            
             if(snapshot.val() === "active"){
                 console.log("this is now a two player game");
                 //if player 1 is the active player, assign random number to player1roll    
                 player1Roll = randomRoll();   
+                //switch active players
                 player1Status = "inactive";
                 player2Status = "active";  
-                //make player 2 active
+                //send updated roll to firebase
                 databaseSet();            
             }
         });                     
     }
 });
 $("#player2Btn").on("click", function(){
-    //if not a computer game and player 2 active  
+    //check the database to see if player 2 active 
     database.ref().child("player2Status").once("value", function(snapshot){            
         if(snapshot.val() === "active"){
-        // give player2 a random number
+        //if player 2 is the active player, give player2roll a random number
         player2Roll = randomRoll();  
+        //switch active players
         player2Status = "inactive";
-        player1Status = "active";        
+        player1Status = "active";   
+        //evaluate the rolls    
         scoreEval();
+        //send updated data to firebase
         databaseSet();         
         }
-    });
- 
+    }); 
 });
+//when click on computer opponent radio button, becomes active
 $("#option1").on("click", function(){    
     DOM.$option1.addClass("active");    
     DOM.$option2.removeClass("active");
     init();
 }); 
+//when click on human opponent radio button, becomes active
 $("#option2").on("click", function(){   
     DOM.$option2.addClass("active");  
     DOM.$option1.removeClass("active"); 
 });
+//reset score when pressed
 $("#reset").on("click", function(){
     UI.scoresToZero();
     databaseSet();
 })
+//initialize game
+init();
 });
