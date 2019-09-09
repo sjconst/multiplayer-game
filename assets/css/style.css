@@ -2,17 +2,13 @@
     Blue #7FCAAC
     Yellow #F3BF2A
     Brown #92623B
-    Gray #383838
- 
+    Gray #383838 
 */
-
 
 /* GLobal styles
 --------------------*/
-
 body{
-    background-image: url("../images/background.jpg"); /*Photo by Paweł Czerwiński on Unsplash*/
-    background-repeat: no-repeat;
+    background-image: url("../images/background.jpg"); /*Photo by Paweł Czerwiński on Unsplash*/    
     background-attachment: fixed;
     color: #F3BF2A; 
     font-family: Georgia, 'Times New Roman', Times, serif;    
@@ -27,7 +23,6 @@ h2 {
     font-size: 1.5rem;   
     font-family: 'Beth Ellen', cursive;
 }
-
 
 /* Main body styles
 --------------------*/
