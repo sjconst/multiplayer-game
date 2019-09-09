@@ -118,8 +118,7 @@ $("#player1Btn").on("click", function(){
     } else {
         //check the database to see if player 1 active
         database.ref().child("player1Status").once("value", function(snapshot){            
-            if(snapshot.val() === "active"){
-                console.log("this is now a two player game");
+            if(snapshot.val() === "active"){                
                 //if player 1 is the active player, assign random number to player1roll    
                 player1Roll = randomRoll();   
                 //switch active players
