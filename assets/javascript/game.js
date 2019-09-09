@@ -13,17 +13,15 @@ firebase.initializeApp(firebaseConfig);
 //Global variables
 var database = firebase.database();   
 var randomRoll = () => Math.floor(Math.random() * 6) + 1;
-var player1Roll, player2Roll, player1Score, player2Score, activePlayer, player1Status, player2Status;
+var player1Roll, player2Roll, player1Score, player2Score, player1Status, player2Status;
 //DOM object
 var DOM = {    
     $player1Score: $("#player1Score"),
     $player2Score: $("#player2Score"),
     $player1Dice: $("img[id*='player1Dice']"),
-    $player2Dice: $("img[id*='player2Dice']"),    
-    $option1: $("input[id*='option1']"),
-    $option2: $("input[id*='option2']"),
-    $option1Label: $("label[id*='labelOption1']"),
-    $option2Label: $("label[id*='labelOption2']")
+    $player2Dice: $("img[id*='player2Dice']"),     
+    $option1: $("label[id*='labelOption1']"),
+    $option2: $("label[id*='labelOption2']")
 };
 //Database set function
 function databaseSet(){
@@ -45,17 +43,6 @@ function checkStatus(player){
         status = "inactive";
         return status;
     }
-};
-//Next player function
-function nextPlayer(){ 
-    DOM.$player1Dice.toggleClass("active");
-    DOM.$player2Dice.toggleClass("active");
-    player1Status = checkStatus(DOM.$player1Dice);
-    player2Status = checkStatus(DOM.$player2Dice);
-    console.log(player1Status);
-    console.log(player2Status);
-    databaseSet();
-    console.log("next player function working");
 };
 // Score evaluation function
 function scoreEval() {
@@ -96,9 +83,9 @@ var UI = {
         DOM.$player1Score.text(player1Score); 
     },
     resetLabelClasses: function(){
-        DOM.$option1Label.removeClass("active");
-        DOM.$option2Label.removeClass("active");
-        DOM.$option1Label.addClass("active");
+        DOM.$option1.removeClass("active");
+        DOM.$option2.removeClass("active");
+        DOM.$option1.addClass("active");
     },
     resetDiceClasses: function(){
         DOM.$player1Dice.removeClass("active");
@@ -132,46 +119,49 @@ database.ref().on("value", function(snapshot){
 });
 // Whenever a user clicks the player1Roll button
 $("#player1Btn").on("click", function(){
-    if(DOM.$option1Label.hasClass("active")){
+    if(DOM.$option1.hasClass("active")){
         // get random number
         player1Roll = randomRoll();   
         // Play against the computer.
         player2Roll = randomRoll();  
         scoreEval();
         databaseSet();
-    } else if(DOM.$player1Dice.hasClass("active") && DOM.$option2Label.hasClass("active")) {
+    } else {
         database.ref().child("player1Status").once("value", function(snapshot){            
             if(snapshot.val() === "active"){
                 console.log("this is now a two player game");
                 //if player 1 is the active player, assign random number to player1roll    
-                player1Roll = randomRoll();     
+                player1Roll = randomRoll();   
+                player1Status = "inactive";
+                player2Status = "active";  
                 //make player 2 active
-                nextPlayer();             
+                databaseSet();            
             }
         });                     
     }
 });
 $("#player2Btn").on("click", function(){
-    //if not a computer game and player 2 active
-    if(DOM.$option2Label.hasClass("active") && DOM.$player2Dice.hasClass("active")){
-        database.ref().child("player2Status").once("value", function(snapshot){            
-            if(snapshot.val() === "active"){
-            // give player2 a random number
-            player2Roll = randomRoll();          
-            scoreEval();
-            nextPlayer();           
-            }
-        });
-    }    
+    //if not a computer game and player 2 active  
+    database.ref().child("player2Status").once("value", function(snapshot){            
+        if(snapshot.val() === "active"){
+        // give player2 a random number
+        player2Roll = randomRoll();  
+        player2Status = "inactive";
+        player1Status = "active";        
+        scoreEval();
+        databaseSet();         
+        }
+    });
+ 
 });
 $("#option1").on("click", function(){    
-    DOM.$option1Label.addClass("active");    
-    DOM.$option2Label.removeClass("active");
+    DOM.$option1.addClass("active");    
+    DOM.$option2.removeClass("active");
     init();
 }); 
 $("#option2").on("click", function(){   
-    DOM.$option2Label.addClass("active");  
-    DOM.$option1Label.removeClass("active"); 
+    DOM.$option2.addClass("active");  
+    DOM.$option1.removeClass("active"); 
 });
 $("#reset").on("click", function(){
     UI.scoresToZero();
