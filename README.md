@@ -23,6 +23,10 @@ To view this live on your browser, go to https://sjconst.github.io/multiplayer-g
 * Play another human opponent by sharing the URL and selecting "human opponent."
 * Switch back to playing the computer by selecting "computer opponent."
 
+## Technical Approach
+
+The main challenge of this web application was sequencing the calls to firebase correctly to enable the dice being rolled in two separate windows, but only when the respective player's turn is up. To achieve this, "active" and "inactive" classes are toggled on several elements and the status is sent to firebase in additional to each players' score and randomized dice roll. 
+
 ## Acknowledgments
 
 This software uses the following open source packages:
