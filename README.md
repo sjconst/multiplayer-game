@@ -9,7 +9,7 @@ To view this live on your browser, go to https://sjconst.github.io/multiplayer-g
 
 ## Authors
 
-* **Stephanie Lake** - (https://github.com/sjconst)
+* **Stephanie Lake** [Github] (https://github.com/sjconst) [Portfolio] (https://www.stephanielake.io)
 
 ## Key Features
 
